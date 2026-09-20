@@ -3,16 +3,19 @@ local HttpService = game:GetService("HttpService")
 local GuiService = game:GetService("GuiService")
 local LocalPlayer = Players.LocalPlayer
 
--- Config đường link web Get Key của bạn
+-- Config đường link web Get Key
 local WEB_GET_KEY_URL = "https://hoang0403122-ship-it.github.io/Hoangaura-key/"
 
--- Hàm lấy HWID/Client ID duy nhất của người chơi
+-- 🔴 DÁN LINK RAW SCRIPT HACK CHÍNH CỦA BẠN VÀO ĐÂY (KHÔNG DÁN LINK HOANG-KEY-SYSTEM!):
+local MAIN_SCRIPT_RAW = "https://raw.githubusercontent.com/lennonxscripts/lennonhubv3/refs/heads/main/stealanegg.lua"
+
+-- Hàm lấy HWID / Client ID duy nhất của người chơi
 local function getHWID()
     local rawId = LocalPlayer.UserId .. "-" .. game:GetService("RbxAnalyticsService"):GetClientId()
     return rawId
 end
 
--- Hàm tạo Key kỳ vọng theo thuật toán (Giống trang show-key.html)
+-- Hàm tạo Key kỳ vọng theo thuật toán
 local function getExpectedKey()
     local hwid = getHWID()
     local hash = 0
@@ -25,17 +28,21 @@ end
 
 -- ==================== HÀM CHẠY SCRIPT CHÍNH ====================
 local function loadMainScript()
-    print("Key chính xác! Đang tải Script chính...")
+    print("Key chính xác! Đang tải Script chính từ GitHub...")
     
-    -- DÁN SCRIPT CHÍNH CỦA BẠN VÀO ĐÂY (Ví dụ bên dưới):
-    -- loadstring(game:HttpGet("https://raw.githubusercontent.com/lennonxscripts/lennonhubv3/refs/heads/main/stealanegg.lua"))()
+    local success, err = pcall(function()
+        loadstring(game:HttpGet(MAIN_SCRIPT_RAW))()
+    end)
     
-    -- Ví dụ thông báo khi vào game thành công:
-    game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = "Hoangaura Hub",
-        Text = "Kích hoạt thành công! Bảng điều khiển đã mở.",
-        Duration = 5
-    })
+    if success then
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "Hoangaura Hub",
+            Text = "Kích hoạt thành công! Script chính đã hoạt động.",
+            Duration = 5
+        })
+    else
+        warn("Lỗi tải Script chính:", err)
+    end
 end
 
 -- ==================== GIAO DIỆN GET KEY GUI ====================
@@ -60,7 +67,7 @@ MainFrame.Parent = KeySystemGui
 MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
 MainFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 37)
 MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
-MainFrame.Size = UDim2.new(0, 350, 0 250)
+MainFrame.Size = UDim2.new(0, 350, 0, 250)
 
 UICorner.CornerRadius = UDim.new(0, 16)
 UICorner.Parent = MainFrame
@@ -128,7 +135,6 @@ CheckCorner.Parent = CheckKeyBtn
 
 -- ==================== SỰ KIỆN NÚT BẤM ====================
 
--- Bấm Get Key: Copy Link hoặc mở Trình duyệt
 GetKeyBtn.MouseButton1Click:Connect(function()
     if setclipboard then
         setclipboard(WEB_GET_KEY_URL)
@@ -139,9 +145,8 @@ GetKeyBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- Bấm Check Key: Kiểm tra Key
 CheckKeyBtn.MouseButton1Click:Connect(function()
-    local userKey = string.gsub(KeyInput.Text, "%s+", "") -- Xóa khoảng trắng thừa
+    local userKey = string.gsub(KeyInput.Text, "%s+", "")
     local expectedKey = getExpectedKey()
 
     if userKey == expectedKey then
@@ -149,11 +154,10 @@ CheckKeyBtn.MouseButton1Click:Connect(function()
         SubTitle.TextColor3 = Color3.fromRGB(50, 255, 126)
         
         task.wait(1)
-        KeySystemGui:Destroy() -- Xóa bảng Get Key
-        loadMainScript()      -- Mở Script chính
+        KeySystemGui:Destroy()
+        loadMainScript()
     else
         SubTitle.Text = "Key không đúng hoặc không thuộc về máy này!"
         SubTitle.TextColor3 = Color3.fromRGB(255, 75, 75)
     end
 end)
-
