@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Lấy Key Tự Động</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at top left, #1e1b4b, #0f172a);
+            color: #fff;
+            padding: 20px;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+        .icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 28px;
+        }
+        h1 { font-size: 24px; font-weight: 700; margin-bottom: 10px; }
+        p { color: #94a3b8; font-size: 14px; margin-bottom: 30px; line-height: 1.5; }
+        .btn-get {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            color: #fff;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+        .btn-get:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="icon">🔑</div>
+        <h1>Get License Key</h1>
+        <p>Bấm vào nút bên dưới để chuyển hướng qua hệ thống xác minh và nhận Key kích hoạt cá nhân của bạn.</p>
+        <button class="btn-get" onclick="startGetKey()">Get Key Ngay</button>
+    </div>
+
+    <script>
+        function startGetKey() {
+            // Thay bằng token API Link4m của bạn
+            const LINK4M_TOKEN = "YOUR_LINK4M_API_TOKEN"; 
+            
+            // Đường dẫn trang nhận Key (thay bằng domain thật của bạn)
+            const targetUrl = window.location.origin + "/show-key.html"; 
+
+            // Chuyển hướng qua Link4m API hoặc chuyển trực tiếp liên kết rút gọn Link4m
+            const link4mUrl = `https://link4m.co/st?api=${LINK4M_TOKEN}&url=${encodeURIComponent(targetUrl)}`;
+            
+            window.location.href = link4mUrl;
+        }
+    </script>
+</body>
+</html>

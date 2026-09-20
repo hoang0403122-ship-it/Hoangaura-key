@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Key Của Bạn</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at top left, #0f172a, #020617);
+            color: #fff;
+            padding: 20px;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+        .success-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 28px;
+        }
+        h1 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+        p { color: #94a3b8; font-size: 14px; margin-bottom: 24px; }
+        .key-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            font-family: monospace;
+            font-size: 18px;
+            color: #38bdf8;
+            letter-spacing: 1px;
+            word-break: break-all;
+            margin-bottom: 20px;
+        }
+        .btn-copy {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            background: #38bdf8;
+            color: #0f172a;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-copy:hover { background: #7dd3fc; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="success-icon">✓</div>
+        <h1>Xác Minh Thành Công!</h1>
+        <p>Đây là Key duy nhất dành riêng cho thiết bị của bạn:</p>
+        
+        <div class="key-box" id="userKey">Đang tạo key...</div>
+        <button class="btn-copy" onclick="copyKey()">Sao Chép Key</button>
+    </div>
+
+    <script>
+        // Hàm tạo chuỗi ngẫu nhiên
+        function generateUniqueKey() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let segment = () => Array.from({length: 4}, () => chars.charAt(Math.floor(Math.random() * chars.length))).join('');
+            return `KEY-${segment()}-${segment()}-${segment()}`;
+        }
+
+        // Lấy hoặc khởi tạo key cho thiết bị người dùng
+        function initUserKey() {
+            let key = localStorage.getItem('user_private_key');
+            if (!key) {
+                key = generateUniqueKey();
+                localStorage.setItem('user_private_key', key);
+            }
+            document.getElementById('userKey').innerText = key;
+        }
+
+        function copyKey() {
+            const keyText = document.getElementById('userKey').innerText;
+            navigator.clipboard.writeText(keyText);
+            alert('Đã sao chép Key: ' + keyText);
+        }
+
+        initUserKey();
+    </script>
+</body>
+</html>
