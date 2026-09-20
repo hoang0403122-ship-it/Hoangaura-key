@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Lấy Key Tự Động</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Lennon Hub Gateway - Get Key</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
         body {
@@ -12,64 +12,120 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: radial-gradient(circle at top left, #1e1b4b, #0f172a);
+            background: #080c14;
             color: #fff;
-            padding: 20px;
+            overflow: hidden;
+            position: relative;
         }
+
+        /* Hiệu ứng đốm sáng Neon background cực chill */
+        .bg-glow {
+            position: absolute;
+            width: 420px;
+            height: 420px;
+            background: radial-gradient(circle, rgba(99,102,241,0.35) 0%, rgba(0,0,0,0) 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            animation: pulseGlow 6s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+            100% { transform: translate(-50%, -50%) scale(1.25); opacity: 0.8; }
+        }
+
+        /* Glassmorphism Card ProMax */
         .card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 40px;
-            max-width: 420px;
-            width: 100%;
+            position: relative;
+            z-index: 10;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 28px;
+            padding: 40px 32px;
+            max-width: 440px;
+            width: 90%;
             text-align: center;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
-        .icon {
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg, #6366f1, #a855f7);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 28px;
+
+        .logo {
+            font-size: 52px;
+            margin-bottom: 12px;
+            display: inline-block;
+            filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.7));
+            animation: floatLogo 3s ease-in-out infinite alternate;
         }
-        h1 { font-size: 24px; font-weight: 700; margin-bottom: 10px; }
-        p { color: #94a3b8; font-size: 14px; margin-bottom: 30px; line-height: 1.5; }
-        .btn-get {
+
+        @keyframes floatLogo {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-8px); }
+        }
+
+        h1 { 
+            font-size: 26px; 
+            font-weight: 800; 
+            margin-bottom: 8px; 
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ffffff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p { 
+            color: #94a3b8; 
+            font-size: 14px; 
+            line-height: 1.6; 
+            margin-bottom: 28px; 
+        }
+
+        .btn-start {
             width: 100%;
             padding: 16px;
             border: none;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #6366f1, #a855f7);
+            border-radius: 16px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
             color: #fff;
-            font-weight: 600;
+            font-weight: 800;
             font-size: 16px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.35);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .btn-get:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.6);
+
+        .btn-start:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(245, 158, 11, 0.55);
+            background: linear-gradient(135deg, #fbbf24, #d97706);
+        }
+
+        .btn-start:active { transform: translateY(0); }
+
+        .footer-note {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #64748b;
         }
     </style>
 </head>
 <body>
+    <div class="bg-glow"></div>
+
     <div class="card">
-        <div class="icon">🔑</div>
-        <h1>Get License Key</h1>
-        <p>Bấm vào nút bên dưới để chuyển hướng qua hệ thống xác minh và nhận Key kích hoạt cá nhân của bạn.</p>
-        <button class="btn-get" onclick="startGetKey()">Get Key Ngay</button>
+        <div class="logo">🚀</div>
+        <h1>Lennon Hub Gateway</h1>
+        <p>Vui lòng vượt qua Link4m bên dưới để lấy Key kích hoạt bản quyền miễn phí cho Lennon Hub!</p>
+        <button class="btn-start" onclick="startCheckpoint()">⚡ Bắt Đầu Get Key</button>
+        <div class="footer-note">Hệ thống bảo mật & xác thực tự động</div>
     </div>
 
     <script>
-        function startGetKey() {
-            // Chuyển hướng thẳng tới link Link4m bạn đã rút gọn
+        function startCheckpoint() {
+            // Chuyển hướng đến Link4m của bạn
             window.location.href = "https://link4m.org/Qo1lH3";
         }
     </script>
