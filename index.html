@@ -69,16 +69,8 @@
 
     <script>
         function startGetKey() {
-            // Thay bằng token API Link4m của bạn
-            const LINK4M_TOKEN = "https://link4m.org/Qo1lH3"; 
-            
-            // Đường dẫn trang nhận Key (thay bằng domain thật của bạn)
-            const targetUrl = window.location.origin + "/show-key.html"; 
-
-            // Chuyển hướng qua Link4m API hoặc chuyển trực tiếp liên kết rút gọn Link4m
-            const link4mUrl = `https://link4m.co/st?api=${LINK4M_TOKEN}&url=${encodeURIComponent(targetUrl)}`;
-            
-            window.location.href = link4mUrl;
+            // Chuyển hướng thẳng tới link Link4m bạn đã rút gọn
+            window.location.href = "https://link4m.org/Qo1lH3";
         }
     </script>
 </body>
