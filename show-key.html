@@ -72,42 +72,17 @@
     <div class="card">
         <div class="icon-success">✓</div>
         <h1>Xác Minh Thành Công!</h1>
-        <p>Đây là Key cá nhân của bạn. Mỗi thiết bị nhận 1 Key cố định riêng biệt.</p>
+        <p>Sao chép Key bên dưới và dán vào Roblox để kích hoạt Script.</p>
         
-        <div class="key-box" id="keyDisplay">Đang tạo Key...</div>
+        <div class="key-box" id="keyDisplay">KEY-LENNONHUBV3</div>
         <button class="btn-copy" onclick="copyKey()">Sao Chép Key</button>
     </div>
 
     <script>
-        // Thuật toán tạo Key khớp 100% với Roblox Script
-        function getDeviceKey() {
-            let userKey = localStorage.getItem("HOANGAURA_DEVICE_KEY");
-            if (userKey) return userKey;
-
-            // Tạo mã fingerprint cố định cho thiết bị
-            const canvas = document.createElement('canvas');
-            const gl = canvas.getContext('webgl');
-            const debugInfo = gl ? gl.getExtension('WEBGL_debug_renderer_info') : null;
-            const renderer = debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_STRING) : '';
-            const rawId = navigator.userAgent + screen.width + screen.height + renderer;
-
-            let hash = 0;
-            for (let i = 0; i < rawId.length; i++) {
-                hash = (hash * 31 + rawId.charCodeAt(i)) % 4294967296;
-            }
-            
-            const hexHash = Math.abs(hash).toString(16).padStart(8, '0').toUpperCase();
-            userKey = `KEY-${hexHash.substring(0, 4)}-${hexHash.substring(4, 8)}`;
-            
-            localStorage.setItem("HOANGAURA_DEVICE_KEY", userKey);
-            return userKey;
-        }
-
-        const myKey = getDeviceKey();
-        document.getElementById("keyDisplay").innerText = myKey;
+        const FIXED_KEY = "KEY-LENNONHUBV3";
 
         function copyKey() {
-            navigator.clipboard.writeText(myKey).then(() => {
+            navigator.clipboard.writeText(FIXED_KEY).then(() => {
                 const btn = document.querySelector(".btn-copy");
                 btn.innerText = "Đã Copy Thành Công!";
                 btn.style.background = "#10b981";
