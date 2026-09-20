@@ -1,34 +1,22 @@
 local Players = game:GetService("Players")
-local HttpService = game:GetService("HttpService")
 local GuiService = game:GetService("GuiService")
 local LocalPlayer = Players.LocalPlayer
 
 -- Config đường link web Get Key
 local WEB_GET_KEY_URL = "https://hoang0403122-ship-it.github.io/Hoangaura-key/"
 
--- 🔴 DÁN LINK RAW SCRIPT HACK CHÍNH CỦA BẠN VÀO ĐÂY (KHÔNG DÁN LINK HOANG-KEY-SYSTEM!):
+-- Link RAW Script chính (Lennon Hub)
 local MAIN_SCRIPT_RAW = "https://raw.githubusercontent.com/lennonxscripts/lennonhubv3/refs/heads/main/stealanegg.lua"
 
--- Hàm lấy HWID / Client ID duy nhất của người chơi
-local function getHWID()
-    local rawId = LocalPlayer.UserId .. "-" .. game:GetService("RbxAnalyticsService"):GetClientId()
-    return rawId
-end
+-- KEY CỐ ĐỊNH
+local HARDCODED_KEY = "KEY-LENNONHUBV3"
 
--- Hàm tạo Key kỳ vọng theo thuật toán
-local function getExpectedKey()
-    local hwid = getHWID()
-    local hash = 0
-    for i = 1, #hwid do
-        hash = (hash * 31 + string.byte(hwid, i, i)) % 4294967296
-    end
-    local hexHash = string.upper(string.format("%08x", hash))
-    return "KEY-" .. string.sub(hexHash, 1, 4) .. "-" .. string.sub(hexHash, 5, 8)
-end
+-- Tên file lưu Key trên thiết bị
+local KEY_FILE_NAME = "HoangauraKey.txt"
 
 -- ==================== HÀM CHẠY SCRIPT CHÍNH ====================
 local function loadMainScript()
-    print("Key chính xác! Đang tải Script chính từ GitHub...")
+    print("Key chính xác! Đang tải Script chính...")
     
     local success, err = pcall(function()
         loadstring(game:HttpGet(MAIN_SCRIPT_RAW))()
@@ -36,8 +24,8 @@ local function loadMainScript()
     
     if success then
         game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "Hoangaura Hub",
-            Text = "Kích hoạt thành công! Script chính đã hoạt động.",
+            Title = "Lennon Hub",
+            Text = "Kích hoạt thành công! Script đã hoạt động.",
             Duration = 5
         })
     else
@@ -45,7 +33,25 @@ local function loadMainScript()
     end
 end
 
--- ==================== GIAO DIỆN GET KEY GUI ====================
+-- ==================== KIỂM TRA KEY ĐÃ LƯU CHƯA ====================
+local function checkSavedKey()
+    if readfile and isfile and isfile(KEY_FILE_NAME) then
+        local savedKey = readfile(KEY_FILE_NAME)
+        savedKey = string.gsub(savedKey, "%s+", "") -- Xóa khoảng trắng thừa
+        if savedKey == HARDCODED_KEY then
+            return true
+        end
+    end
+    return false
+end
+
+-- Nếu đã nhập Key đúng từ trước ➔ Bỏ qua Bảng Key và Chạy Script Luôn!
+if checkSavedKey() then
+    loadMainScript()
+    return
+end
+
+-- ==================== GIAO DIỆN GET KEY GUI (Chạy khi chưa có Key) ====================
 local KeySystemGui = Instance.new("ScreenGui")
 local MainFrame = Instance.new("Frame")
 local UICorner = Instance.new("UICorner")
@@ -88,7 +94,7 @@ SubTitle.BackgroundTransparency = 1
 SubTitle.Position = UDim2.new(0, 0, 0, 45)
 SubTitle.Size = UDim2.new(1, 0, 0, 20)
 SubTitle.Font = Enum.Font.SourceSans
-SubTitle.Text = "Nhập Key của bạn để mở khóa Script"
+SubTitle.Text = "Nhập Key 1 lần duy nhất để lưu trên thiết bị"
 SubTitle.TextColor3 = Color3.fromRGB(150, 150, 170)
 SubTitle.TextSize = 14
 
@@ -98,7 +104,7 @@ KeyInput.BackgroundColor3 = Color3.fromRGB(35, 35, 55)
 KeyInput.Position = UDim2.new(0.08, 0, 0.35, 0)
 KeyInput.Size = UDim2.new(0.84, 0, 0, 40)
 KeyInput.Font = Enum.Font.SourceSansBold
-KeyInput.PlaceholderText = "Dán Key vào đây (KEY-XXXX-XXXX)..."
+KeyInput.PlaceholderText = "Dán Key vào đây..."
 KeyInput.PlaceholderColor3 = Color3.fromRGB(100, 100, 120)
 KeyInput.Text = ""
 KeyInput.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -147,17 +153,21 @@ end)
 
 CheckKeyBtn.MouseButton1Click:Connect(function()
     local userKey = string.gsub(KeyInput.Text, "%s+", "")
-    local expectedKey = getExpectedKey()
 
-    if userKey == expectedKey then
-        SubTitle.Text = "Key chính xác! Đang tải..."
+    if userKey == HARDCODED_KEY then
+        SubTitle.Text = "Key chính xác! Đã lưu Key..."
         SubTitle.TextColor3 = Color3.fromRGB(50, 255, 126)
         
+        -- Lưu Key vào bộ nhớ thiết bị
+        if writefile then
+            writefile(KEY_FILE_NAME, userKey)
+        end
+
         task.wait(1)
         KeySystemGui:Destroy()
         loadMainScript()
     else
-        SubTitle.Text = "Key không đúng hoặc không thuộc về máy này!"
+        SubTitle.Text = "Key không đúng! Vui lòng kiểm tra lại."
         SubTitle.TextColor3 = Color3.fromRGB(255, 75, 75)
     end
 end)
