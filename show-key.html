@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Key Của Bạn</title>
+    <title>Xác Minh Thành Công - Nhận Key</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -12,7 +12,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: radial-gradient(circle at top left, #0f172a, #020617);
+            background: radial-gradient(circle at top left, #1e1b4b, #0f172a);
             color: #fff;
             padding: 20px;
         }
@@ -22,12 +22,12 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 24px;
             padding: 40px;
-            max-width: 450px;
+            max-width: 420px;
             width: 100%;
             text-align: center;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
         }
-        .success-icon {
+        .icon-success {
             width: 64px;
             height: 64px;
             background: linear-gradient(135deg, #10b981, #059669);
@@ -39,69 +39,84 @@
             font-size: 28px;
         }
         h1 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
-        p { color: #94a3b8; font-size: 14px; margin-bottom: 24px; }
+        p { color: #94a3b8; font-size: 13px; margin-bottom: 24px; }
         .key-box {
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.3);
             border: 1px dashed rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
             padding: 16px;
+            border-radius: 12px;
             font-family: monospace;
             font-size: 18px;
+            font-weight: 700;
             color: #38bdf8;
-            letter-spacing: 1px;
-            word-break: break-all;
+            letter-spacing: 2px;
             margin-bottom: 20px;
+            word-break: break-all;
         }
         .btn-copy {
             width: 100%;
             padding: 14px;
             border: none;
             border-radius: 12px;
-            background: #38bdf8;
-            color: #0f172a;
-            font-weight: 700;
+            background: #3b82f6;
+            color: #fff;
+            font-weight: 600;
             font-size: 15px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s;
         }
-        .btn-copy:hover { background: #7dd3fc; }
+        .btn-copy:active { transform: scale(0.98); }
     </style>
 </head>
 <body>
     <div class="card">
-        <div class="success-icon">✓</div>
+        <div class="icon-success">✓</div>
         <h1>Xác Minh Thành Công!</h1>
-        <p>Đây là Key duy nhất dành riêng cho thiết bị của bạn:</p>
+        <p>Đây là Key cá nhân của bạn. Mỗi thiết bị nhận 1 Key cố định riêng biệt.</p>
         
-        <div class="key-box" id="userKey">Đang tạo key...</div>
+        <div class="key-box" id="keyDisplay">Đang tạo Key...</div>
         <button class="btn-copy" onclick="copyKey()">Sao Chép Key</button>
     </div>
 
     <script>
-        // Hàm tạo chuỗi ngẫu nhiên
-        function generateUniqueKey() {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            let segment = () => Array.from({length: 4}, () => chars.charAt(Math.floor(Math.random() * chars.length))).join('');
-            return `KEY-${segment()}-${segment()}-${segment()}`;
+        // Thuật toán tạo Key khớp 100% với Roblox Script
+        function getDeviceKey() {
+            let userKey = localStorage.getItem("HOANGAURA_DEVICE_KEY");
+            if (userKey) return userKey;
+
+            // Tạo mã fingerprint cố định cho thiết bị
+            const canvas = document.createElement('canvas');
+            const gl = canvas.getContext('webgl');
+            const debugInfo = gl ? gl.getExtension('WEBGL_debug_renderer_info') : null;
+            const renderer = debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_STRING) : '';
+            const rawId = navigator.userAgent + screen.width + screen.height + renderer;
+
+            let hash = 0;
+            for (let i = 0; i < rawId.length; i++) {
+                hash = (hash * 31 + rawId.charCodeAt(i)) % 4294967296;
+            }
+            
+            const hexHash = Math.abs(hash).toString(16).padStart(8, '0').toUpperCase();
+            userKey = `KEY-${hexHash.substring(0, 4)}-${hexHash.substring(4, 8)}`;
+            
+            localStorage.setItem("HOANGAURA_DEVICE_KEY", userKey);
+            return userKey;
         }
 
-        // Lấy hoặc khởi tạo key cho thiết bị người dùng
-        function initUserKey() {
-            let key = localStorage.getItem('user_private_key');
-            if (!key) {
-                key = generateUniqueKey();
-                localStorage.setItem('user_private_key', key);
-            }
-            document.getElementById('userKey').innerText = key;
-        }
+        const myKey = getDeviceKey();
+        document.getElementById("keyDisplay").innerText = myKey;
 
         function copyKey() {
-            const keyText = document.getElementById('userKey').innerText;
-            navigator.clipboard.writeText(keyText);
-            alert('Đã sao chép Key: ' + keyText);
+            navigator.clipboard.writeText(myKey).then(() => {
+                const btn = document.querySelector(".btn-copy");
+                btn.innerText = "Đã Copy Thành Công!";
+                btn.style.background = "#10b981";
+                setTimeout(() => {
+                    btn.innerText = "Sao Chép Key";
+                    btn.style.background = "#3b82f6";
+                }, 2000);
+            });
         }
-
-        initUserKey();
     </script>
 </body>
 </html>
