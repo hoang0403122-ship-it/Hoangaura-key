@@ -3,98 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hoangaura - Anime Multi-Hub System</title>
+    <title>Hoangaura - Multi-Hub Key System</title>
     <style>
         * { box-sizing: border-box; }
         body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            margin: 0; padding: 20px; min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: url('https://i.pinimg.com/originals/18/17/80/181780138cd91fc1f021727ff0646c10.gif') no-repeat center center fixed;
-            background-size: cover;
-            color: #ffffff;
-            position: relative;
+            background-size: cover; color: #ffffff; position: relative;
         }
-        /* Lớp phủ mờ ảo phong cách anime */
         body::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(10, 10, 20, 0.7);
-            backdrop-filter: blur(8px);
-            z-index: 1;
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(12, 10, 26, 0.78); backdrop-filter: blur(10px); z-index: 1;
         }
         .container {
-            position: relative;
-            z-index: 2;
-            background: rgba(20, 22, 37, 0.85);
-            border: 1px solid rgba(236, 72, 153, 0.4);
-            padding: 35px 25px;
-            border-radius: 24px;
-            width: 380px;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(236, 72, 153, 0.2);
+            position: relative; z-index: 2;
+            background: rgba(22, 19, 38, 0.85);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            padding: 30px 22px; border-radius: 24px;
+            width: 100%; max-width: 420px; text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(168, 85, 247, 0.2);
         }
-        h2 {
-            margin: 0 0 5px 0;
-            font-size: 22px;
-            background: linear-gradient(135deg, #ff758c, #ff7eb3);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 2px 10px rgba(255, 117, 140, 0.3);
+        .title {
+            font-size: 20px; font-weight: 800; letter-spacing: 1px; margin-bottom: 5px;
+            background: linear-gradient(135deg, #e879f9, #c084fc, #818cf8);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .subtitle {
-            font-size: 12px;
-            color: #a0aec0;
-            margin-bottom: 25px;
-        }
-        .btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            padding: 13px;
-            margin: 12px 0;
-            border: none;
-            border-radius: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            text-decoration: none;
-            font-size: 13px;
-            transition: all 0.3s ease;
+        .subtitle { font-size: 11px; color: #9ca3af; margin-bottom: 22px; line-height: 1.4; }
+        .btn-hub {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            width: 100%; padding: 12px; margin: 10px 0; border: none; border-radius: 12px;
+            font-weight: bold; cursor: pointer; font-size: 13px; color: white;
+            text-decoration: none; transition: 0.3s;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
-        .btn-1 { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; }
-        .btn-2 { background: linear-gradient(135deg, #ec4899, #8b5cf6); color: white; }
-        .btn-3 { background: linear-gradient(135deg, #06b6d4, #3b82f6); color: white; }
-        .btn:hover {
-            transform: translateY(-3px) scale(1.02);
-            filter: brightness(1.2);
-            box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
-        }
-        .footer {
-            margin-top: 20px;
-            font-size: 11px;
-            color: #718096;
-            letter-spacing: 1px;
-        }
+        .btn-1 { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .btn-2 { background: linear-gradient(135deg, #ec4899, #8b5cf6); }
+        .btn-3 { background: linear-gradient(135deg, #06b6d4, #3b82f6); }
+        .btn-4 { background: linear-gradient(135deg, #10b981, #059669); }
+        .btn-hub:hover { transform: translateY(-2px); filter: brightness(1.15); }
+        .footer-info { margin-top: 20px; font-size: 9px; color: #6b7280; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>✨ ANIME MULTI-HUB ✨</h2>
-        <div class="subtitle">Chọn Hub để lấy Key tự động (Mỗi 12 tiếng)</div>
+        <div class="title">AURA MULTI-HUB SYSTEM</div>
+        <div class="subtitle">Hệ thống cấp Key tự động qua cổng Link4M.<br>Chọn Hub bạn muốn lấy Key bên dưới:</div>
         
-        <!-- Thay link4m tương ứng của bạn vào đây -->
-        <a href="https://link4m.org/go/VAgwdqi" class="btn btn-1" target="_blank">🔑 Get Key VoidShell Hub</a>
-        <a href="https://link4m.org/FSE8f0aN" class="btn btn-2" target="_blank">🛡️ Get Key WhiteX Hub</a>
-        <a href="https://link4m.org/go/Nl1zeEbq" class="btn btn-3" target="_blank">🚀 Get Key VZStudio Hub</a>
+        <!-- Thay các URL_LINK4M_... thành link rút gọn của bạn -->
+        <a href="URL_LINK4M_HUB1" class="btn-hub btn-1" target="_blank">🔑 Get Key VoidShell Hub</a>
+        <a href="URL_LINK4M_HUB2" class="btn-hub btn-2" target="_blank">🛡️ Get Key WhiteX Hub</a>
+        <a href="URL_LINK4M_HUB3" class="btn-hub btn-3" target="_blank">🚀 Get Key VZStudio Hub</a>
+        <a href="URL_LINK4M_HUB4" class="btn-hub btn-4" target="_blank">💎 Get Key JualNasi Hub</a>
 
-        <div class="footer">POWERED BY HOANGAURA</div>
+        <div class="footer-info">HOANGAURA • ANTI-BYPASS SECURE SYSTEM</div>
     </div>
 </body>
 </html>
