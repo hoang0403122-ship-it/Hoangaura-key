@@ -67,28 +67,36 @@
             </div>
         </div>
         <button class="btn-main" onclick="copyKey()">📋 COPY KEY NGAY</button>
-        <div class="countdown" id="countdown">⏳ Thời hạn còn lại: Đang tính...</div>
+        <div class="countdown" id="countdown">⏳ Thời hạn Key còn lại: Đang tính...</div>
         <div class="footer-info">VZSTUDIO HUB • SECURE ANTI-BYPASS SYSTEM</div>
     </div>
     <script>
-        function updateKeyAndTimer() {
-            const now = new Date();
-            const h = now.getHours();
-            const prefix = "VZ";
-            const dateStr = `${now.getFullYear()}${now.getMonth()+1}${now.getDate()}`;
-            const session = h < 12 ? 'P1' : 'P2';
-            document.getElementById('keyDisplay').innerText = `${prefix}-${dateStr}-${session}`;
+        let expireTime = localStorage.getItem("vz_expire_time");
+        const DURATION = 12 * 60 * 60 * 1000;
+        if (!expireTime || Date.now() > expireTime) {
+            expireTime = Date.now() + DURATION;
+            localStorage.setItem("vz_expire_time", expireTime);
+        }
 
-            const target = new Date(now);
-            if (h < 12) { target.setHours(12, 0, 0, 0); } else { target.setHours(24, 0, 0, 0); }
-            const diff = Math.floor((target - now) / 1000);
+        const nowObj = new Date();
+        const prefix = "VZ";
+        const dateStr = `${nowObj.getFullYear()}${nowObj.getMonth()+1}${nowObj.getDate()}`;
+        const session = nowObj.getHours() < 12 ? 'P1' : 'P2';
+        document.getElementById('keyDisplay').innerText = `${prefix}-${dateStr}-${session}`;
+
+        function updateTimer() {
+            const diff = Math.floor((expireTime - Date.now()) / 1000);
+            if (diff <= 0) {
+                document.getElementById('countdown').innerText = "⏳ Key đã hết hạn! Vui lòng vượt link lại.";
+                return;
+            }
             const remH = Math.floor(diff / 3600);
             const remM = Math.floor((diff % 3600) / 60);
             const remS = diff % 60;
-            document.getElementById('countdown').innerText = `⏳ Thời gian đổi Key mới: ${remH}h ${remM}m ${remS}s`;
+            document.getElementById('countdown').innerText = `⏳ Thời hạn Key còn lại: ${remH}h ${remM}m ${remS}s`;
         }
-        updateKeyAndTimer();
-        setInterval(updateKeyAndTimer, 1000);
+        updateTimer();
+        setInterval(updateTimer, 1000);
 
         function copyKey() { 
             navigator.clipboard.writeText(document.getElementById('keyDisplay').innerText); 
