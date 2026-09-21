@@ -1,202 +1,259 @@
--- Lennon Hub Key System - Fix Full UI cho Delta
 local Players = game:GetService("Players")
-local CoreGui = game:GetService("CoreGui")
-local TweenService = game:GetService("TweenService")
-local GuiService = game:GetService("GuiService")
+local StarterGui = game:GetService("StarterGui")
 local LocalPlayer = Players.LocalPlayer
 
+local HUBS = {
+    {
+        Name = "VoidShell Hub",
+        Prefix = "VOID",
+        Color1 = Color3.fromRGB(245, 158, 11),
+        Color2 = Color3.fromRGB(217, 119, 6),
+        ScriptUrl = "https://raw.githubusercontent.com/VoidShell-null/VoidShell-Hub/refs/heads/main/Scripts/StealAnEgg.luau",
+        FileName = "VoidShell_Key.txt"
+    },
+    {
+        Name = "WhiteX Hub",
+        Prefix = "WHITEX",
+        Color1 = Color3.fromRGB(236, 72, 153),
+        Color2 = Color3.fromRGB(147, 51, 234),
+        ScriptUrl = "https://raw.githubusercontent.com/WhiteX1208/Scripts/refs/heads/main/StealEggOnly.luau",
+        FileName = "WhiteX_Key.txt"
+    },
+    {
+        Name = "VZStudio Hub",
+        Prefix = "VZ",
+        Color1 = Color3.fromRGB(6, 182, 212),
+        Color2 = Color3.fromRGB(59, 130, 246),
+        ScriptUrl = "http://vxezestudio.online/api/scripts/script_G5CGjqj2X3rOS/strem/init",
+        FileName = "VZStudio_Key.txt"
+    }
+}
+
 local WEB_GET_KEY_URL = "https://hoang0403122-ship-it.github.io/Hoangaura-key/"
-local MAIN_SCRIPT_RAW = "https://raw.githubusercontent.com/lennonxscripts/lennonhubv3/refs/heads/main/stealanegg.lua"
-local KEY_FILE_NAME = "LennonHubKey.txt"
 
--- Key giải mã XOR: LENNON-WJXQH-KPLM
-local _0xEnc = {22, 19, 26, 26, 27, 26, 121, 5, 26, 14, 3, 24, 121, 27, 0, 24, 29}
-local _0xK = 114
-
-local function _0xDecode()
-    local _res = {}
-    for _i = 1, #_0xEnc do
-        local _b = bit32 and bit32.bxor(_0xEnc[_i], _0xK) or (_0xEnc[_i] ~ _0xK)
-        table.insert(_res, string.char(_b))
+local function getExpectedKey(prefix)
+    local success, dt = pcall(function() return os.date("!*t", os.time() + 25200) end)
+    if success and dt then
+        return string.format("%s-%d%d%d-%s", prefix, dt.year, dt.month, dt.day, dt.hour < 12 and "P1" or "P2")
     end
-    return table.concat(_res)
+    return prefix .. "-FALLBACK"
 end
 
-local HARDCODED_KEY = _0xDecode()
-
-local function loadMainScript()
-    task.spawn(function()
-        pcall(function()
-            loadstring(game:HttpGet(MAIN_SCRIPT_RAW))()
-        end)
-    end)
-end
-
-local function getSavedKey()
-    local success, res = pcall(function()
-        if readfile and isfile and isfile(KEY_FILE_NAME) then
-            return string.gsub(readfile(KEY_FILE_NAME), "%s+", "")
-        end
-    end)
-    if success then return res end
-    return nil
-end
-
-local savedKey = getSavedKey()
-local isAutoLogin = (savedKey == HARDCODED_KEY)
-
--- Xóa GUI cũ nếu có
-local parentGui = (CoreGui:FindFirstChild("CoreGui") or LocalPlayer:WaitForChild("PlayerGui"))
-if parentGui:FindFirstChild("LennonProMaxKeyGui") then
-    parentGui.LennonProMaxKeyGui:Destroy()
-end
-
-local KeySystemGui = Instance.new("ScreenGui")
-KeySystemGui.Name = "LennonProMaxKeyGui"
-KeySystemGui.Parent = parentGui
-KeySystemGui.ResetOnSpawn = false
-
--- Khung chính
-local MainFrame = Instance.new("Frame")
-MainFrame.Parent = KeySystemGui
-MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-MainFrame.BackgroundColor3 = Color3.fromRGB(18, 22, 35)
-MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
-MainFrame.Size = UDim2.new(0, 380, 0, 250)
-MainFrame.ClipsDescendants = true
-
-local UICorner = Instance.new("UICorner")
-UICorner.CornerRadius = UDim.new(0, 16)
-UICorner.Parent = MainFrame
-
-local UIStroke = Instance.new("UIStroke")
-UIStroke.Parent = MainFrame
-UIStroke.Color = Color3.fromRGB(99, 102, 241)
-UIStroke.Thickness = 1.5
-
--- Tiêu đề
-local Title = Instance.new("TextLabel")
-Title.Parent = MainFrame
-Title.BackgroundTransparency = 1
-Title.Position = UDim2.new(0, 0, 0, 15)
-Title.Size = UDim2.new(1, 0, 0, 30)
-Title.Font = Enum.Font.SourceSansBold
-Title.Text = "LENNON HUB VIP"
-Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-Title.TextSize = 22
-
--- Phụ đề / Trạng thái
-local SubTitle = Instance.new("TextLabel")
-SubTitle.Parent = MainFrame
-SubTitle.BackgroundTransparency = 1
-SubTitle.Position = UDim2.new(0, 20, 0, 50)
-SubTitle.Size = UDim2.new(1, -40, 0, 20)
-SubTitle.Font = Enum.Font.SourceSans
-SubTitle.Text = "Vui lòng nhập Key bản quyền để tiếp tục"
-SubTitle.TextColor3 = Color3.fromRGB(160, 175, 200)
-SubTitle.TextSize = 14
-
--- Khung nhập Key
-local KeyInputContainer = Instance.new("Frame")
-KeyInputContainer.Parent = MainFrame
-KeyInputContainer.BackgroundColor3 = Color3.fromRGB(28, 35, 55)
-KeyInputContainer.Position = UDim2.new(0.08, 0, 0.35, 0)
-KeyInputContainer.Size = UDim2.new(0.84, 0, 0, 45)
-
-local InputCorner = Instance.new("UICorner")
-InputCorner.CornerRadius = UDim.new(0, 10)
-InputCorner.Parent = KeyInputContainer
-
-local KeyInput = Instance.new("TextBox")
-KeyInput.Parent = KeyInputContainer
-KeyInput.BackgroundTransparency = 1
-KeyInput.Size = UDim2.new(1, -20, 1, 0)
-KeyInput.Position = UDim2.new(0, 10, 0, 0)
-KeyInput.Font = Enum.Font.SourceSansBold
-KeyInput.PlaceholderText = "Dán Key vào đây..."
-KeyInput.PlaceholderColor3 = Color3.fromRGB(100, 115, 145)
-KeyInput.Text = ""
-KeyInput.TextColor3 = Color3.fromRGB(56, 189, 248)
-KeyInput.TextSize = 16
-
--- Nút Get Key
-local GetKeyBtn = Instance.new("TextButton")
-GetKeyBtn.Parent = MainFrame
-GetKeyBtn.BackgroundColor3 = Color3.fromRGB(245, 158, 11)
-GetKeyBtn.Position = UDim2.new(0.08, 0, 0.65, 0)
-GetKeyBtn.Size = UDim2.new(0.41, 0, 0, 45)
-GetKeyBtn.Font = Enum.Font.SourceSansBold
-GetKeyBtn.Text = "GET KEY"
-GetKeyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-GetKeyBtn.TextSize = 16
-
-local BtnCorner1 = Instance.new("UICorner")
-BtnCorner1.CornerRadius = UDim.new(0, 10)
-BtnCorner1.Parent = GetKeyBtn
-
--- Nút Check Key
-local CheckKeyBtn = Instance.new("TextButton")
-CheckKeyBtn.Parent = MainFrame
-CheckKeyBtn.BackgroundColor3 = Color3.fromRGB(99, 102, 241)
-CheckKeyBtn.Position = UDim2.new(0.51, 0, 0.65, 0)
-CheckKeyBtn.Size = UDim2.new(0.41, 0, 0, 45)
-CheckKeyBtn.Font = Enum.Font.SourceSansBold
-CheckKeyBtn.Text = "CHECK KEY"
-CheckKeyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-CheckKeyBtn.TextSize = 16
-
-local BtnCorner2 = Instance.new("UICorner")
-BtnCorner2.CornerRadius = UDim.new(0, 10)
-BtnCorner2.Parent = CheckKeyBtn
-
--- Kiểm tra tự động đăng nhập
-if isAutoLogin then
-    KeyInput.Text = savedKey
-    KeyInput.TextEditable = false
-    SubTitle.Text = "Đã tìm thấy Key! Đang mở Hub..."
-    SubTitle.TextColor3 = Color3.fromRGB(52, 211, 153)
-    GetKeyBtn.Visible = false
-    CheckKeyBtn.Visible = false
-
-    task.spawn(function()
-        task.wait(1.5)
-        KeySystemGui:Destroy()
-        loadMainScript()
-    end)
-    return
-end
-
--- Sự kiện bấm nút Get Key
-GetKeyBtn.MouseButton1Click:Connect(function()
+local function sendNotif(title, text)
     pcall(function()
-        if setclipboard then setclipboard(WEB_GET_KEY_URL) end
+        StarterGui:SetCore("SendNotification", {Title = title, Text = text, Duration = 3})
     end)
-    pcall(function()
-        if GuiService and GuiService.OpenBrowserWindow then
-            GuiService:OpenBrowserWindow(WEB_GET_KEY_URL)
-        end
-    end)
-    SubTitle.Text = "Đã copy link Get Key vào bộ nhớ tạm!"
-    SubTitle.TextColor3 = Color3.fromRGB(251, 191, 36)
-end)
+end
 
--- Sự kiện bấm nút Check Key
-CheckKeyBtn.MouseButton1Click:Connect(function()
-    local userKey = string.gsub(KeyInput.Text or "", "%s+", "")
+-- Hàm tạo hiệu ứng bo góc mượt mà
+local function addCorner(parent, radius)
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, radius or 14)
+    corner.Parent = parent
+end
 
-    if userKey == HARDCODED_KEY then
-        SubTitle.Text = "Key chính xác! Đang mở Hub..."
-        SubTitle.TextColor3 = Color3.fromRGB(52, 211, 153)
-        
+-- Hàm tạo viền sáng sang trọng
+local function addStroke(parent, color, transparency)
+    local stroke = Instance.new("UIStroke")
+    stroke.Color = color or Color3.fromRGB(255, 255, 255)
+    stroke.Transparency = transparency or 0.7
+    stroke.Thickness = 1.5
+    stroke.Parent = parent
+end
+
+local function openHubSelector()
+    local oldGui = (game:GetService("CoreGui") or LocalPlayer:WaitForChild("PlayerGui")):FindFirstChild("MultiHubSelector")
+    if oldGui then oldGui:Destroy() end
+
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Name = "MultiHubSelector"
+    ScreenGui.Parent = (game:GetService("CoreGui") or LocalPlayer:WaitForChild("PlayerGui"))
+    ScreenGui.ResetOnSpawn = false
+
+    local MainFrame = Instance.new("Frame", ScreenGui)
+    MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+    MainFrame.BackgroundColor3 = Color3.fromRGB(13, 14, 21)
+    MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+    MainFrame.Size = UDim2.new(0, 400, 0, 310)
+    addCorner(MainFrame, 18)
+    addStroke(MainFrame, Color3.fromRGB(147, 51, 234), 0.4)
+
+    local TopBar = Instance.new("Frame", MainFrame)
+    TopBar.BackgroundColor3 = Color3.fromRGB(20, 21, 33)
+    TopBar.Size = UDim2.new(1, 0, 0, 48)
+    addCorner(TopBar, 18)
+
+    -- Fix phần bo góc dưới của TopBar
+    local FixBar = Instance.new("Frame", TopBar)
+    FixBar.BackgroundColor3 = Color3.fromRGB(20, 21, 33)
+    FixBar.BorderSizePixel = 0
+    FixBar.Position = UDim2.new(0, 0, 0.5, 0)
+    FixBar.Size = UDim2.new(1, 0, 0.5, 0)
+
+    local Title = Instance.new("TextLabel", TopBar)
+    Title.BackgroundTransparency = 1
+    Title.Position = UDim2.new(0, 20, 0, 0)
+    Title.Size = UDim2.new(0.8, 0, 1, 0)
+    Title.Font = Enum.Font.GothamBold
+    Title.Text = "✨ HOANGAURA MULTI-HUB"
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Title.TextSize = 15
+    Title.TextXAlignment = Enum.TextXAlignment.Left
+
+    local CloseBtn = Instance.new("TextButton", TopBar)
+    CloseBtn.AnchorPoint = Vector2.new(1, 0.5)
+    CloseBtn.BackgroundColor3 = Color3.fromRGB(239, 68, 68)
+    CloseBtn.Position = UDim2.new(1, -12, 0.5, 0)
+    CloseBtn.Size = UDim2.new(0, 28, 0, 28)
+    CloseBtn.Font = Enum.Font.GothamBold
+    CloseBtn.Text = "✕"
+    CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    CloseBtn.TextSize = 13
+    addCorner(CloseBtn, 8)
+    CloseBtn.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
+
+    local SubTitle = Instance.new("TextLabel", MainFrame)
+    SubTitle.BackgroundTransparency = 1
+    SubTitle.Position = UDim2.new(0, 20, 0, 58)
+    SubTitle.Size = UDim2.new(1, -40, 0, 20)
+    SubTitle.Font = Enum.Font.Gotham
+    SubTitle.Text = "Lựa chọn Hub yêu thích của bạn bên dưới:"
+    SubTitle.TextColor3 = Color3.fromRGB(156, 163, 175)
+    SubTitle.TextSize = 12
+    SubTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+    for i, hub in ipairs(HUBS) do
+        local hasKey = false
         pcall(function()
-            if writefile then writefile(KEY_FILE_NAME, userKey) end
+            if readfile and isfile and isfile(hub.FileName) then
+                if string.gsub(readfile(hub.FileName), "%s+", "") == getExpectedKey(hub.Prefix) then
+                    hasKey = true
+                end
+            end
         end)
 
-        task.wait(1)
-        KeySystemGui:Destroy()
-        loadMainScript()
-    else
-        SubTitle.Text = "Key không đúng! Vui lòng thử lại."
-        SubTitle.TextColor3 = Color3.fromRGB(248, 113, 113)
+        local HubBtn = Instance.new("TextButton", MainFrame)
+        HubBtn.BackgroundColor3 = Color3.fromRGB(26, 28, 43)
+        HubBtn.Position = UDim2.new(0.05, 0, 0, 85 + ((i - 1) * 66))
+        HubBtn.Size = UDim2.new(0.9, 0, 0, 54)
+        HubBtn.Font = Enum.Font.GothamBold
+        HubBtn.Text = hasKey and ("⭐ " .. hub.Name .. " (Đã có Key)") or ("🚀 Mở " .. hub.Name)
+        HubBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        HubBtn.TextSize = 14
+        addCorner(HubBtn, 12)
+        addStroke(HubBtn, hub.Color1, 0.3)
+
+        HubBtn.MouseButton1Click:Connect(function()
+            if hasKey then
+                ScreenGui:Destroy()
+                sendNotif(hub.Name, "Đang khởi chạy script siêu mượt...")
+                pcall(function() loadstring(game:HttpGet(hub.ScriptUrl))() end)
+            else
+                ScreenGui:Destroy()
+                
+                local KeyGui = Instance.new("ScreenGui")
+                KeyGui.Name = "KeyInputGui"
+                KeyGui.Parent = (game:GetService("CoreGui") or LocalPlayer:WaitForChild("PlayerGui"))
+                KeyGui.ResetOnSpawn = false
+                
+                local Frame = Instance.new("Frame", KeyGui)
+                Frame.AnchorPoint = Vector2.new(0.5, 0.5)
+                Frame.BackgroundColor3 = Color3.fromRGB(13, 14, 21)
+                Frame.Position = UDim2.new(0.5, 0, 0.5, 0)
+                Frame.Size = UDim2.new(0, 380, 0, 230)
+                addCorner(Frame, 18)
+                addStroke(Frame, hub.Color1, 0.3)
+                
+                local TB = Instance.new("Frame", Frame)
+                TB.BackgroundColor3 = Color3.fromRGB(20, 21, 33)
+                TB.Size = UDim2.new(1, 0, 0, 44)
+                addCorner(TB, 18)
+
+                local FixTB = Instance.new("Frame", TB)
+                FixTB.BackgroundColor3 = Color3.fromRGB(20, 21, 33)
+                FixTB.BorderSizePixel = 0
+                FixTB.Position = UDim2.new(0, 0, 0.5, 0)
+                FixTB.Size = UDim2.new(1, 0, 0.5, 0)
+                
+                local TText = Instance.new("TextLabel", TB)
+                TText.BackgroundTransparency = 1
+                TText.Position = UDim2.new(0, 18, 0, 0)
+                TText.Size = UDim2.new(0.55, 0, 1, 0)
+                TText.Font = Enum.Font.GothamBold
+                TText.Text = "🔑 " .. string.upper(hub.Name)
+                TText.TextColor3 = hub.Color1
+                TText.TextSize = 13
+                TText.TextXAlignment = Enum.TextXAlignment.Left
+
+                local BackBtn = Instance.new("TextButton", TB)
+                BackBtn.AnchorPoint = Vector2.new(1, 0.5)
+                BackBtn.BackgroundColor3 = Color3.fromRGB(40, 42, 60)
+                BackBtn.Position = UDim2.new(1, -12, 0.5, 0)
+                BackBtn.Size = UDim2.new(0, 80, 0, 28)
+                BackBtn.Font = Enum.Font.GothamBold
+                BackBtn.Text = "⬅ Quay lại"
+                BackBtn.TextColor3 = Color3.fromRGB(220, 220, 220)
+                BackBtn.TextSize = 11
+                addCorner(BackBtn, 8)
+                
+                BackBtn.MouseButton1Click:Connect(function()
+                    KeyGui:Destroy()
+                    openHubSelector()
+                end)
+                
+                local Input = Instance.new("TextBox", Frame)
+                Input.BackgroundColor3 = Color3.fromRGB(20, 21, 33)
+                Input.Position = UDim2.new(0.05, 0, 0.35, 0)
+                Input.Size = UDim2.new(0.9, 0, 0, 44)
+                Input.Font = Enum.Font.GothamBold
+                Input.PlaceholderText = "Dán Key 12h vào đây..."
+                Input.PlaceholderColor3 = Color3.fromRGB(100, 105, 120)
+                Input.Text = ""
+                Input.TextColor3 = Color3.fromRGB(255, 255, 255)
+                Input.TextSize = 13
+                addCorner(Input, 10)
+                addStroke(Input, Color3.fromRGB(255, 255, 255), 0.8)
+                
+                local GetBtn = Instance.new("TextButton", Frame)
+                GetBtn.BackgroundColor3 = Color3.fromRGB(35, 38, 56)
+                GetBtn.Position = UDim2.new(0.05, 0, 0.68, 0)
+                GetBtn.Size = UDim2.new(0.43, 0, 0, 42)
+                GetBtn.Font = Enum.Font.GothamBold
+                GetBtn.Text = "🌐 GET KEY"
+                GetBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+                GetBtn.TextSize = 13
+                addCorner(GetBtn, 10)
+                
+                local CheckBtn = Instance.new("TextButton", Frame)
+                CheckBtn.BackgroundColor3 = hub.Color1
+                CheckBtn.Position = UDim2.new(0.52, 0, 0.68, 0)
+                CheckBtn.Size = UDim2.new(0.43, 0, 0, 42)
+                CheckBtn.Font = Enum.Font.GothamBold
+                CheckBtn.Text = "🚀 CHECK"
+                CheckBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+                CheckBtn.TextSize = 13
+                addCorner(CheckBtn, 10)
+                
+                GetBtn.MouseButton1Click:Connect(function()
+                    pcall(function() setclipboard(WEB_GET_KEY_URL) end)
+                    sendNotif("Link", "Đã copy link trang web Get Key thành công!")
+                end)
+                
+                CheckBtn.MouseButton1Click:Connect(function()
+                    local userKey = string.gsub(Input.Text or "", "%s+", "")
+                    if userKey == getExpectedKey(hub.Prefix) then
+                        pcall(function() writefile(hub.FileName, userKey) end)
+                        sendNotif("Thành công", "Key chính xác! Đang mở Hub...")
+                        KeyGui:Destroy()
+                        task.wait(0.5)
+                        pcall(function() loadstring(game:HttpGet(hub.ScriptUrl))() end)
+                    else
+                        sendNotif("Lỗi", "Key không chính xác hoặc đã hết phiên 12h!")
+                    end
+                end)
+            end
+        end)
     end
-end)
+end
+
+openHubSelector()
