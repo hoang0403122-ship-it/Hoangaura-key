@@ -27,7 +27,7 @@
         }
         .title {
             font-size: 20px; font-weight: 800; letter-spacing: 1px; margin-bottom: 5px;
-            background: linear-gradient(135deg, #34d399, #10b981, #059669);
+            background: linear-gradient(135deg, #10b981, #059669);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
         .subtitle { font-size: 11px; color: #9ca3af; margin-bottom: 22px; line-height: 1.4; }
@@ -51,7 +51,7 @@
             box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4); transition: 0.3s;
         }
         .btn-main:hover { transform: translateY(-2px); filter: brightness(1.15); }
-        .note { font-size: 10px; color: #f43f5e; margin-top: 12px; font-weight: 500; }
+        .countdown { font-size: 11px; color: #38bdf8; margin-top: 12px; font-weight: 600; }
         .footer-info { margin-top: 20px; font-size: 9px; color: #6b7280; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px; }
     </style>
 </head>
@@ -67,17 +67,33 @@
             </div>
         </div>
         <button class="btn-main" onclick="copyKey()">📋 COPY KEY NGAY</button>
-        <div class="note">🔒 Key đã hết hạn 12 giờ! Vượt link lại để lấy key mới.</div>
+        <div class="countdown" id="countdown">⏳ Thời hạn còn lại: Đang tính...</div>
         <div class="footer-info">JUALNASI HUB • SECURE ANTI-BYPASS SYSTEM</div>
     </div>
     <script>
-        function getKey() {
-            const d = new Date();
-            return `JUAL-${d.getFullYear()}${d.getMonth()+1}${d.getDate()}-${d.getHours() < 12 ? 'P1' : 'P2'}`;
+        function updateKeyAndTimer() {
+            const now = new Date();
+            const h = now.getHours();
+            const prefix = "JUAL";
+            const dateStr = `${now.getFullYear()}${now.getMonth()+1}${now.getDate()}`;
+            const session = h < 12 ? 'P1' : 'P2';
+            document.getElementById('keyDisplay').innerText = `${prefix}-${dateStr}-${session}`;
+
+            const target = new Date(now);
+            if (h < 12) { target.setHours(12, 0, 0, 0); } else { target.setHours(24, 0, 0, 0); }
+            const diff = Math.floor((target - now) / 1000);
+            const remH = Math.floor(diff / 3600);
+            const remM = Math.floor((diff % 3600) / 60);
+            const remS = diff % 60;
+            document.getElementById('countdown').innerText = `⏳ Thời gian đổi Key mới: ${remH}h ${remM}m ${remS}s`;
         }
-        const k = getKey(); document.getElementById('keyDisplay').innerText = k;
-        function copyKey() { navigator.clipboard.writeText(k); alert('Đã copy Key JualNasi thành công!'); }
+        updateKeyAndTimer();
+        setInterval(updateKeyAndTimer, 1000);
+
+        function copyKey() { 
+            navigator.clipboard.writeText(document.getElementById('keyDisplay').innerText); 
+            alert('Đã copy Key JualNasi thành công!'); 
+        }
     </script>
 </body>
 </html>
-
