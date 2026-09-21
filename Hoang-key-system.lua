@@ -7,7 +7,6 @@ local HUBS = {
         Name = "VoidShell Hub",
         Prefix = "VOID",
         Color1 = Color3.fromRGB(245, 158, 11),
-        Color2 = Color3.fromRGB(217, 119, 6),
         ScriptUrl = "https://raw.githubusercontent.com/VoidShell-null/VoidShell-Hub/refs/heads/main/Scripts/StealAnEgg.luau",
         FileName = "VoidShell_Key.txt"
     },
@@ -15,7 +14,6 @@ local HUBS = {
         Name = "WhiteX Hub",
         Prefix = "WHITEX",
         Color1 = Color3.fromRGB(236, 72, 153),
-        Color2 = Color3.fromRGB(147, 51, 234),
         ScriptUrl = "https://raw.githubusercontent.com/WhiteX1208/Scripts/refs/heads/main/StealEggOnly.luau",
         FileName = "WhiteX_Key.txt"
     },
@@ -23,9 +21,15 @@ local HUBS = {
         Name = "VZStudio Hub",
         Prefix = "VZ",
         Color1 = Color3.fromRGB(6, 182, 212),
-        Color2 = Color3.fromRGB(59, 130, 246),
         ScriptUrl = "http://vxezestudio.online/api/scripts/script_G5CGjqj2X3rOS/strem/init",
         FileName = "VZStudio_Key.txt"
+    },
+    {
+        Name = "JualNasi Hub",
+        Prefix = "JUAL",
+        Color1 = Color3.fromRGB(16, 185, 129),
+        ScriptUrl = "https://raw.githubusercontent.com/JualNasiRendang/loader/refs/heads/main/main.lua",
+        FileName = "JualNasi_Key.txt"
     }
 }
 
@@ -45,14 +49,12 @@ local function sendNotif(title, text)
     end)
 end
 
--- Hàm tạo hiệu ứng bo góc mượt mà
 local function addCorner(parent, radius)
     local corner = Instance.new("UICorner")
     corner.CornerRadius = UDim.new(0, radius or 14)
     corner.Parent = parent
 end
 
--- Hàm tạo viền sáng sang trọng
 local function addStroke(parent, color, transparency)
     local stroke = Instance.new("UIStroke")
     stroke.Color = color or Color3.fromRGB(255, 255, 255)
@@ -74,7 +76,7 @@ local function openHubSelector()
     MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
     MainFrame.BackgroundColor3 = Color3.fromRGB(13, 14, 21)
     MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
-    MainFrame.Size = UDim2.new(0, 400, 0, 310)
+    MainFrame.Size = UDim2.new(0, 400, 0, 370)
     addCorner(MainFrame, 18)
     addStroke(MainFrame, Color3.fromRGB(147, 51, 234), 0.4)
 
@@ -83,7 +85,6 @@ local function openHubSelector()
     TopBar.Size = UDim2.new(1, 0, 0, 48)
     addCorner(TopBar, 18)
 
-    -- Fix phần bo góc dưới của TopBar
     local FixBar = Instance.new("Frame", TopBar)
     FixBar.BackgroundColor3 = Color3.fromRGB(20, 21, 33)
     FixBar.BorderSizePixel = 0
@@ -95,9 +96,9 @@ local function openHubSelector()
     Title.Position = UDim2.new(0, 20, 0, 0)
     Title.Size = UDim2.new(0.8, 0, 1, 0)
     Title.Font = Enum.Font.GothamBold
-    Title.Text = "✨ HOANGAURA MULTI-HUB"
+    Title.Text = "✨ AURA MULTI-HUB SYSTEM"
     Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Title.TextSize = 15
+    Title.TextSize = 14
     Title.TextXAlignment = Enum.TextXAlignment.Left
 
     local CloseBtn = Instance.new("TextButton", TopBar)
@@ -114,10 +115,10 @@ local function openHubSelector()
 
     local SubTitle = Instance.new("TextLabel", MainFrame)
     SubTitle.BackgroundTransparency = 1
-    SubTitle.Position = UDim2.new(0, 20, 0, 58)
+    SubTitle.Position = UDim2.new(0, 20, 0, 55)
     SubTitle.Size = UDim2.new(1, -40, 0, 20)
     SubTitle.Font = Enum.Font.Gotham
-    SubTitle.Text = "Lựa chọn Hub yêu thích của bạn bên dưới:"
+    SubTitle.Text = "Chọn Hub bạn muốn sử dụng bên dưới:"
     SubTitle.TextColor3 = Color3.fromRGB(156, 163, 175)
     SubTitle.TextSize = 12
     SubTitle.TextXAlignment = Enum.TextXAlignment.Left
@@ -134,19 +135,19 @@ local function openHubSelector()
 
         local HubBtn = Instance.new("TextButton", MainFrame)
         HubBtn.BackgroundColor3 = Color3.fromRGB(26, 28, 43)
-        HubBtn.Position = UDim2.new(0.05, 0, 0, 85 + ((i - 1) * 66))
-        HubBtn.Size = UDim2.new(0.9, 0, 0, 54)
+        HubBtn.Position = UDim2.new(0.05, 0, 0, 82 + ((i - 1) * 65))
+        HubBtn.Size = UDim2.new(0.9, 0, 0, 52)
         HubBtn.Font = Enum.Font.GothamBold
         HubBtn.Text = hasKey and ("⭐ " .. hub.Name .. " (Đã có Key)") or ("🚀 Mở " .. hub.Name)
         HubBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-        HubBtn.TextSize = 14
+        HubBtn.TextSize = 13
         addCorner(HubBtn, 12)
         addStroke(HubBtn, hub.Color1, 0.3)
 
         HubBtn.MouseButton1Click:Connect(function()
             if hasKey then
                 ScreenGui:Destroy()
-                sendNotif(hub.Name, "Đang khởi chạy script siêu mượt...")
+                sendNotif(hub.Name, "Đang khởi chạy script...")
                 pcall(function() loadstring(game:HttpGet(hub.ScriptUrl))() end)
             else
                 ScreenGui:Destroy()
