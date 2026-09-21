@@ -3,37 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VoidShell - Key Result</title>
+    <title>VoidShell - Key System</title>
     <style>
+        * { box-sizing: border-box; }
         body {
-            margin: 0; height: 100vh; display: flex; justify-content: center; align-items: center;
-            font-family: 'Segoe UI', sans-serif;
+            margin: 0; padding: 20px; min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: url('https://i.pinimg.com/originals/8a/8d/30/8a8d30e4c62b9044f507b5a839f8f2b1.gif') no-repeat center center fixed;
-            background-size: cover; color: #fff; position: relative;
+            background-size: cover; color: #ffffff; position: relative;
         }
-        body::before { content: ''; position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(10,10,20,0.75); backdrop-filter: blur(8px); z-index: 1; }
-        .box { position: relative; z-index: 2; background: rgba(20,22,37,0.9); padding: 30px; border-radius: 20px; text-align: center; width: 320px; border: 1px solid rgba(245, 158, 11, 0.4); box-shadow: 0 15px 35px rgba(0,0,0,0.8); }
-        h3 { color: #f59e0b; margin-top: 0; text-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
-        .key-box { background: #0f1117; padding: 12px; border-radius: 10px; font-weight: bold; color: #34d399; margin: 15px 0; word-break: break-all; border: 1px dashed #f59e0b; }
-        .copy-btn { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.2s; }
-        .copy-btn:hover { filter: brightness(1.2); transform: scale(1.02); }
+        body::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(12, 10, 26, 0.75); backdrop-filter: blur(10px); z-index: 1;
+        }
+        .container {
+            position: relative; z-index: 2;
+            background: rgba(22, 19, 38, 0.85);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            padding: 30px 20px; border-radius: 24px;
+            width: 100%; max-width: 420px; text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(245, 158, 11, 0.2);
+        }
+        .title {
+            font-size: 20px; font-weight: 800; letter-spacing: 1px; margin-bottom: 5px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .subtitle { font-size: 11px; color: #9ca3af; margin-bottom: 22px; line-height: 1.4; }
+        .box-card {
+            background: rgba(30, 27, 51, 0.7); border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px; padding: 14px; margin-bottom: 15px; text-align: left;
+        }
+        .box-label { font-size: 10px; font-weight: bold; color: #f59e0b; margin-bottom: 6px; }
+        .key-row {
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(13, 11, 24, 0.9); padding: 10px 14px; border-radius: 10px;
+            border: 1px dashed rgba(245, 158, 11, 0.4);
+        }
+        .key-text { font-family: monospace; font-size: 13px; font-weight: bold; color: #34d399; word-break: break-all; }
+        .copy-icon { background: none; border: none; cursor: pointer; color: #9ca3af; font-size: 16px; }
+        .btn-main {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            width: 100%; padding: 13px; margin-top: 10px; border: none; border-radius: 12px;
+            font-weight: bold; cursor: pointer; font-size: 13px; color: white;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.4); transition: 0.3s;
+        }
+        .btn-main:hover { transform: translateY(-2px); filter: brightness(1.15); }
+        .countdown { font-size: 11px; color: #38bdf8; margin-top: 12px; font-weight: 600; }
+        .footer-info { margin-top: 20px; font-size: 9px; color: #6b7280; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px; }
     </style>
 </head>
 <body>
-    <div class="box">
-        <h3>🎉 VoidShell Key</h3>
-        <div class="key-box" id="keyDisplay">Đang tạo...</div>
-        <button class="copy-btn" onclick="copyKey()">📋 Copy Key Ngay</button>
+    <div class="container">
+        <div class="title">VOIDSHELL KEY SYSTEM</div>
+        <div class="subtitle">Your 12-hour Key has been generated successfully!<br>Paste the Key into the in-game menu.</div>
+        <div class="box-card">
+            <div class="box-label">🔑 YOUR KEY</div>
+            <div class="key-row">
+                <span class="key-text" id="keyDisplay">Đang tạo...</span>
+                <button class="copy-icon" onclick="copyKey()">📋</button>
+            </div>
+        </div>
+        <button class="btn-main" onclick="copyKey()">📋 COPY KEY NGAY</button>
+        <div class="countdown" id="countdown">⏳ Thời hạn còn lại: Đang tính...</div>
+        <div class="footer-info">VOIDSHELL HUB • SECURE ANTI-BYPASS SYSTEM</div>
     </div>
     <script>
-        function getKey() {
-            const d = new Date();
-            return `VOID-${d.getFullYear()}${d.getMonth()+1}${d.getDate()}-${d.getHours() < 12 ? 'P1' : 'P2'}`;
+        function updateKeyAndTimer() {
+            const now = new Date();
+            const h = now.getHours();
+            const prefix = "VOID";
+            const dateStr = `${now.getFullYear()}${now.getMonth()+1}${now.getDate()}`;
+            const session = h < 12 ? 'P1' : 'P2';
+            document.getElementById('keyDisplay').innerText = `${prefix}-${dateStr}-${session}`;
+
+            // Tính thời gian đếm ngược đến mốc đổi tiếp theo (12:00 hoặc 00:00)
+            const target = new Date(now);
+            if (h < 12) {
+                target.setHours(12, 0, 0, 0);
+            } else {
+                target.setHours(24, 0, 0, 0);
+            }
+            const diff = Math.floor((target - now) / 1000);
+            const remH = Math.floor(diff / 3600);
+            const remM = Math.floor((diff % 3600) / 60);
+            const remS = diff % 60;
+            document.getElementById('countdown').innerText = `⏳ Thời gian đổi Key mới: ${remH}h ${remM}m ${remS}s`;
         }
-        const k = getKey();
-        document.getElementById('keyDisplay').innerText = k;
-        function copyKey() { navigator.clipboard.writeText(k); alert('Đã copy Key VoidShell thành công!'); }
+        updateKeyAndTimer();
+        setInterval(updateKeyAndTimer, 1000);
+
+        function copyKey() { 
+            navigator.clipboard.writeText(document.getElementById('keyDisplay').innerText); 
+            alert('Đã copy Key VoidShell thành công!'); 
+        }
     </script>
 </body>
 </html>
-
